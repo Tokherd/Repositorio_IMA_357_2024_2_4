@@ -3,10 +3,12 @@ import pandas as pd
 import numpy as np
 import math
 from collections import Counter, OrderedDict
-from nltk.tokenize import TreebankWordTokenizer
+
 import nltk
 nltk.download('stopwords')
+
 from nltk.corpus import stopwords
+from nltk.tokenize import TreebankWordTokenizer
 
 # Tokenizador y stopwords
 tokenizer = TreebankWordTokenizer()
