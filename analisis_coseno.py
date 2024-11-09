@@ -3,12 +3,10 @@ import pandas as pd
 import numpy as np
 import math
 from collections import Counter, OrderedDict
-
+from nltk.tokenize import TreebankWordTokenizer
 import nltk
 nltk.download('stopwords')
-
 from nltk.corpus import stopwords
-from nltk.tokenize import TreebankWordTokenizer
 
 # Tokenizador y stopwords
 tokenizer = TreebankWordTokenizer()
@@ -60,7 +58,6 @@ st.dataframe(data)
 
 # Inputs de texto
 palabra = st.text_input('Input de palabra')
-oracion = st.text_input('Input de oración')
 
 # Procesar input de palabra
 if palabra:
@@ -70,6 +67,8 @@ if palabra:
     st.write(f"Documento con mayor frecuencia de la palabra '{palabra}':")
     st.write(f"Título: {doc_max_freq['title']}")
     st.write(f"Frecuencia: {doc_max_freq['frecuencia']}")
+
+oracion = st.text_input('Input de oración')
 
 # Procesar input de oración
 if oracion:
