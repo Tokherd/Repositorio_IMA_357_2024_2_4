@@ -58,6 +58,7 @@ st.dataframe(data)
 
 # Inputs de texto
 palabra = st.text_input('Input de palabra')
+oracion = st.text_input('Input de oración')
 
 # Procesar input de palabra
 if palabra:
@@ -67,8 +68,6 @@ if palabra:
     st.write(f"Documento con mayor frecuencia de la palabra '{palabra}':")
     st.write(f"Título: {doc_max_freq['title']}")
     st.write(f"Frecuencia: {doc_max_freq['frecuencia']}")
-
-oracion = st.text_input('Input de oración')
 
 # Procesar input de oración
 if oracion:
@@ -85,9 +84,9 @@ if oracion:
     doc_max_similitud = data.iloc[np.argmax(similitudes)]
     max_similitud = max(similitudes)
 
-    #st.write(f"Documento más similar a la oración '{oracion}' respecto a la similitud coseno:")
-    #st.write(f"Título: {doc_max_similitud['title']}")
-    #st.write(f"Similitud coseno: {max_similitud}")
+    st.write(f"Documento más similar a la oración '{oracion}' respecto a la similitud coseno:")
+    st.write(f"Título: {doc_max_similitud['title']}")
+    st.write(f"Similitud coseno: {max_similitud}")
 
     # Calcular suma de frecuencias
     def suma_frecuencias(doc, tokens):
