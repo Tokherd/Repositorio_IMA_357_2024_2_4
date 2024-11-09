@@ -2,10 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import math
-import nltk
-nltk.download('stopwords')
 from collections import Counter, OrderedDict
 from nltk.tokenize import TreebankWordTokenizer
+import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 
 # Tokenizador y stopwords
