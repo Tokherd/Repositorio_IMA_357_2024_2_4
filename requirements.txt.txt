@@ -1,4 +1,0 @@
-streamlit
-pandas
-numpy
-nltk==3.7
