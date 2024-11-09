@@ -1,4 +1,4 @@
-name: IMA357_2024_2
+
 channels:
   - conda-forge
 dependencies:
