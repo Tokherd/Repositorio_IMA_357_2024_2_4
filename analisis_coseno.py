@@ -15,7 +15,7 @@ stop_words = set(stopwords.words('spanish'))
 # Función para cargar el archivo CSV desde GitHub
 @st.cache_data
 def load_data():
-    url = 'https://github.com/Tokherd/Repositorio_IMA_357_2024_2_4.git/main/cuerpo_documentos_p2_gr_4.csv'
+    url = 'https://github.com/Tokherd/Repositorio_IMA_357_2024_2_4/main/cuerpo_documentos_p2_gr_4.csv'
     return pd.read_csv(url)
 
 # Función para calcular la similitud coseno
