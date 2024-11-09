@@ -5,7 +5,7 @@ import math
 from collections import Counter, OrderedDict
 from nltk.tokenize import TreebankWordTokenizer
 import nltk
-nltk.download('stopwords')
+#nltk.download('stopwords')
 from nltk.corpus import stopwords
 
 # Tokenizador y stopwords
@@ -13,20 +13,20 @@ tokenizer = TreebankWordTokenizer()
 stop_words = set(stopwords.words('spanish'))
 
 # Función para cargar el archivo CSV desde GitHub
-@st.cache
+@st.cache_data
 def load_data():
-    url = 'https://raw.githubusercontent.com/tu_usuario/tu_repositorio/main/cuerpo_documentos_p2_gr_4.csv'
+    url = 'https://raw.githubusercontent.com/Tokherd/Repositorio_IMA_357_2024_2_4/main/cuerpo_documentos_p2_gr_4.csv'
     return pd.read_csv(url)
 
 # Función para calcular la similitud coseno
 def sim_coseno(vec1, vec2):
-    vec1 = np.array(list(vec1.values()))
-    vec2 = np.array(list(vec2.values()))
-    dot_prod = np.dot(vec1, vec2)
-    norm_1 = np.linalg.norm(vec1)
-    norm_2 = np.linalg.norm(vec2)
-    if norm_1 == 0 or norm_2 == 0:
-        return 0.0  # Evitar división por cero
+    vec1 = [val for val in vec1.values()]
+    vec2 = [val for val in vec2.values()]
+    dot_prod = 0
+    for i, v in enumerate(vec1):
+        dot_prod += v * vec2[i]
+    norm_1 = math.sqrt(sum([x**2 for x in vec1]))
+    norm_2 = math.sqrt(sum([x**2 for x in vec2]))
     return dot_prod / (norm_1 * norm_2)
 
 # Función para vectorizar documentos
@@ -35,15 +35,13 @@ def BoW_vec(docs: list, tokenizer):
     for doc in docs:
         tokens = tokenizer.tokenize(doc.lower())
         tokens = [word for word in tokens if word not in stop_words]  # Eliminar stopwords
-        doc_tokens += [sorted(tokens)]
+        doc_tokens.append(tokens)
     all_doc_tokens = sum(doc_tokens, [])
     lexico = sorted(set(all_doc_tokens))
     zero_vector = OrderedDict((token, 0) for token in lexico)
     document_bow_vectors = []
-    for i, doc in enumerate(docs):
+    for tokens in doc_tokens:
         vec = zero_vector.copy()
-        tokens = tokenizer.tokenize(doc.lower())
-        tokens = [word for word in tokens if word not in stop_words]  # Eliminar stopwords
         token_counts = Counter(tokens)
         for key, value in token_counts.items():
             vec[key] = value
@@ -60,16 +58,17 @@ st.dataframe(data)
 
 # Inputs de texto
 palabra = st.text_input('Input de palabra')
-oracion = st.text_input('Input de oración')
 
 # Procesar input de palabra
 if palabra:
-    palabra = palabra.lower()
-    data['frecuencia'] = data['body'].apply(lambda x: x.lower().split().count(palabra))
+    palabra = palabra.lower().strip()
+    data['frecuencia'] = data['body'].apply(lambda x: tokenizer.tokenize(x.lower()).count(palabra))
     doc_max_freq = data.loc[data['frecuencia'].idxmax()]
     st.write(f"Documento con mayor frecuencia de la palabra '{palabra}':")
     st.write(f"Título: {doc_max_freq['title']}")
     st.write(f"Frecuencia: {doc_max_freq['frecuencia']}")
+
+oracion = st.text_input('Input de oración')
 
 # Procesar input de oración
 if oracion:
@@ -86,12 +85,18 @@ if oracion:
     doc_max_similitud = data.iloc[np.argmax(similitudes)]
     max_similitud = max(similitudes)
 
-    st.write(f"Documento más similar a la oración '{oracion}' respecto a la similitud coseno:")
-    st.write(f"Título: {doc_max_similitud['title']}")
-    st.write(f"Similitud coseno: {max_similitud}")
+    #st.write(f"Documento más similar a la oración '{oracion}' respecto a la similitud coseno:")
+    #st.write(f"Título: {doc_max_similitud['title']}")
+    #st.write(f"Similitud coseno: {max_similitud}")
 
     # Calcular suma de frecuencias
-    data['suma_frecuencias'] = data['body'].apply(lambda x: sum([x.lower().split().count(token) for token in oracion_tokens]))
+    def suma_frecuencias(doc, tokens):
+        doc_tokens = tokenizer.tokenize(doc.lower())
+        doc_tokens = [word for word in doc_tokens if word not in stop_words]
+        token_counts = Counter(doc_tokens)
+        return sum(token_counts[token] for token in tokens)
+
+    data['suma_frecuencias'] = data['body'].apply(lambda x: suma_frecuencias(x, oracion_tokens))
     doc_max_suma_frecuencias = data.loc[data['suma_frecuencias'].idxmax()]
     max_suma_frecuencias = max(data['suma_frecuencias'])
 
