@@ -27,6 +27,8 @@ def sim_coseno(vec1, vec2):
         dot_prod += v * vec2[i]
     norm_1 = math.sqrt(sum([x**2 for x in vec1]))
     norm_2 = math.sqrt(sum([x**2 for x in vec2]))
+    if norm_1 == 0 or norm_2 == 0:
+        return 0.0  # O si uno de los vectores es cero
     return dot_prod / (norm_1 * norm_2)
 
 # Función para vectorizar documentos
